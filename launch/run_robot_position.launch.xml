@@ -1,0 +1,15 @@
+<launch>
+
+    <node pkg = "robot_position" exec = "robot_position_server" name = "robot_position_a">
+        <param name = "robot_name" value = "A"/>
+    </node>
+
+    <node pkg = "robot_position" exec = "robot_position_server" name = "robot_position_b">
+        <param name = "robot_name" value = "B"/>
+    </node>
+
+    <node pkg = "robot_position" exec = "startup" name = "startup">
+        <param name = "node_name" value = "['robot_position_a', 'robot_position_b']"/>
+    </node>
+
+</launch>
