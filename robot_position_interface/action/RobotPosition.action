@@ -1,0 +1,12 @@
+# Goal
+int64 position # Position in meters
+int64 velocity # Velocity in meters per second
+
+---
+# Result
+int64 position
+string message
+
+---
+# Feedback
+int64 current_position
