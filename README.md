@@ -1,6 +1,6 @@
 # robot_position_pkg
 
-`robot_position_pkg` is a ROS 2 package designed to control a simulated robot's linear position using an **Action Server** implemented as a `LifecycleNode`. The robot moves along a 1D axis between positions 0 and 100. Goals are defined by the desired target position and movement velocity. The node supports full lifecycle transitions, real-time feedback, goal preemption, and cancellation.
+`robot_position_pkg` is a repo with two ROS 2 packages designed to control a simulated robot's linear position using an **Action Server** implemented as a `LifecycleNode`. The robot moves along a 1D axis between positions 0 and 100. Goals are defined by the desired target position and movement velocity. The node supports full lifecycle transitions, real-time feedback, goal preemption, and cancellation.
 
 ## Features
 
@@ -22,7 +22,6 @@ Required packages:
 - `rclcpp_action`
 - `lifecycle_msgs`
 - `rcl_interfaces`
-- `robot_position_interface` (custom action definition)
 
 ## Build and Run Instructions
 
@@ -32,11 +31,32 @@ Clone and build the package inside your ROS 2 workspace:
 cd ~/ros2_ws/src
 git clone https://github.com/Eduard0Castro/robot_position_pkg.git
 cd ..
-colcon build --packages-select robot_position
+colcon build --packages-up-to robot_position
 source install/setup.bash
 ```
+## robot_position_interface Package
 
-## Node Descriptions
+The `robot_position_interface` package defines the custom message and action types used by the `robot_position` system. It separates the communication interfaces from the implementation logic, following good modularity practices in ROS 2.
+
+### Contents:
+
+- `action/RobotPosition.action`:  
+  Defines the action used to control the robot's position. It includes:
+  - **Goal**: target position and velocity
+  - **Feedback**: current position
+  - **Result**: final position and a status message
+
+- `msg/RobotPositionCancel.msg`:  
+  A custom message (optional usage) that can be used for canceling or tracking goal state, if extended in future features.
+
+- `srv/` *(currently empty)*:  
+  This directory is reserved for any custom service definitions you may add later.
+
+This package is built as a standard ROS 2 interface package and should be compiled before any other package that depends on its definitions.
+
+## robot_position Package
+
+The robot_position package contains the full implementation of the system’s runtime logic, including the action server responsible for simulating robot motion, a client node for sending position commands, and a lifecycle controller node (startup) that manages state transitions for one or more server instances.
 
 ### robot_position_server.cpp
 
@@ -120,6 +140,7 @@ ros2 action send_goal /<node_name> robot_position_interface/action/RobotPosition
 ## Package Structure
 ```bash
 robot_position/
+├── include/
 ├── launch/
 │ └── run_robot_position.launch.py
 ├── src/
@@ -128,6 +149,15 @@ robot_position/
 │ └── startup.cpp
 ├── CMakeLists.txt
 ├── LICENSE
+└── package.xml
+
+robot_position_interface/
+├── action/
+│ └── RobotPosition.action
+├── msg/
+│ └── RobotPositionCancel.msg
+├── srv/
+├── CMakeLists.txt
 └── package.xml
 ```
 
